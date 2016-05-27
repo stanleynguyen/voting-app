@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Stan's Voting App</a>
+      <a class="navbar-brand" href="/">Stan's Voting App</a>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
@@ -70,7 +70,7 @@
             <h4 class='modal-title'><i class='fa fa-pied-piper'></i>  Sign Up</h4>
           </div>
           <div class="modal-body">
-            <form method='post'>
+            <form method='post' id='signupform'>
               <fieldset class="form-group">
                 <label for="userName">User Name</label>
                 <input type="text" class="form-control" name="newusername" placeholder="Username" required='true'>
@@ -82,7 +82,11 @@
                 </fieldset>
                 <fieldset class="form-group">
                   <label for="password">Password</label>
-                  <input type="password" class="form-control" name="newpassword" placeholder="Password" required='true'>
+                  <input type="password" class="form-control" name="newpassword" id='newpassword' placeholder="Password" required='true'>
+                </fieldset>
+                <fieldset class="form-group">
+                  <label for="password">Confirm Password</label>
+                  <input type="password" class="form-control" id="confirmpassword" placeholder="Password" required='true'>
                 </fieldset>
                 <fieldset>
                   <div class="alert alert-danger" role="alert" id='upalert'></div>
@@ -105,6 +109,13 @@
             $('#upalert').text(alertText[problem]);
             $('#upalert').show();
         }
+        $('#signupform').submit(function(){
+          if($('#newpassword').val() !== $('#confirmpassword').val()){
+            event.preventDefault();
+            $('#upalert').text('Confirm Password doesnt match!');
+            $('#upalert').show();
+          }
+        })
       })
     </script>
 </nav>

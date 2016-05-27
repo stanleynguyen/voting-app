@@ -1,0 +1,100 @@
+<% include ./layout %>
+<% include ./logged-nav %>
+<body>
+    <div class='container'>
+        <div class='row'>
+            <div class='jumbotron'>
+                <h1 class='text-center'>Dashboard</h1>
+                <p class='text-center'><button class='btn btn-success' data-toggle='modal' data-target='#newPoll'><i class='fa fa-plus'></i>  New Poll</button></p>
+            </div>
+        </div>
+        <div class="modal fade" id="newPoll" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class='modal-title'><i class='fa fa-plus'></i>  New Poll</h4>
+              </div>
+              <div class="modal-body">
+                <form method = 'post' id='form'>
+                  <fieldset class='form-group'>
+                      <label for='question'>Question</label>
+                      <input type='text' class='form-control' placeholder='Your Question' name='question' maxlength='100' required='true'>
+                  </fieldset>
+                  <fieldset class='form-group' id='answer'>
+                      <label for='answer'>Choices</label>
+                  </fieldset>
+                  <fieldset class='form-group'>
+                      <button class='form-control btn btn-default' id='plus'><i class='glyphicon glyphicon-plus'></i></button>
+                  </fieldset>
+                  <fieldset>
+                    <button type="submit" class="btn btn-primary pull-right">Submit</button>
+                  </fieldset>
+                 </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+            $(document).ready(function(){
+                var option = 0;
+                $('#form').bind('keypress keydown keyup', function(e){
+                   if(e.keyCode == 13) {
+                        e.preventDefault();
+                   }
+                });
+                $('#plus').click(function(){
+                    event.preventDefault();
+                    $('#answer').append("<input type='text' class='form-control' style='margin-top: 0.5%;' placeholder='Choice "+(option+1)+"' name='"+(option+1)+"' maxlength='50' required='true'>");
+                    option++;
+                });
+            });
+        </script>
+        <style>
+            .active a{
+                margin-top: 0.5%;
+            }
+        </style>
+        <div class='row'>
+            <div id="exTab2" class="container">	
+                <ul class="nav nav-tabs">
+                	<li class="active">
+                        <a  href="#all" data-toggle="tab">All Polls</a>
+                	</li>
+                	<li>
+                	    <a href="#other" data-toggle="tab">Other's Polls</a>
+                	</li>
+                	<li>
+                	    <a href="#my" data-toggle="tab">My Polls</a>
+                	</li>
+                </ul>
+                
+                <div class="tab-content ">
+                	<div class="tab-pane active" id="all">
+                        <div class="list-group">
+                            <% polls.forEach(function(poll){%>
+                                <a href='/polls/<%= poll._id %>' class='list-group-item'><%= poll.question %><span class='pull-right'><strong><%= poll.author %></strong></span></a>
+                            <% }) %>
+                        </div>
+                	</div>
+                    <div class="tab-pane" id="my">
+                         <div class="list-group">
+                            <% myPolls.forEach(function(poll){%>
+                                <a href='/mypolls/<%= poll._id %>' class='list-group-item'><%= poll.question %></a>
+                            <% }) %>
+                        </div>
+                	</div>
+                	<div class="tab-pane" id="other">
+                         <div class="list-group">
+                            <% otherPolls.forEach(function(poll){%>
+                                <a href='/polls/<%= poll._id %>' class='list-group-item'><%= poll.question %><span class='pull-right'><strong><%= poll.author %></strong></span></a>
+                            <% }) %>
+                        </div>
+                	</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

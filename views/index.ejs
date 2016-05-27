@@ -10,11 +10,9 @@
         </div>
         <div class='row'>
             <div class="list-group">
-                <a href="#" class="list-group-item">Cras justo odio</a>
-                <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
-                <a href="#" class="list-group-item">Morbi leo risus</a>
-                <a href="#" class="list-group-item">Porta ac consectetur ac</a>
-                <a href="#" class="list-group-item">Vestibulum at eros</a>
+                <% polls.forEach(function(poll){%>
+                    <a href='/polls/<%= poll._id %>' class='list-group-item'><%= poll.question %><span class='pull-right'><strong><%= poll.author %></strong></span></a>
+                <% }) %>
             </div>
         </div>
     </div>
