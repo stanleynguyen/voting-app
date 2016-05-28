@@ -1,4 +1,5 @@
 var Poll = require("./models/poll");
+var User = require("./models/user");
 
 module.exports = function(app, passport){
     
@@ -92,7 +93,8 @@ module.exports = function(app, passport){
                     autho: false,
                     choices: poll.getChoices(),
                     question: poll.question,
-                    percentage: poll.getPercentage()
+                    percentage: poll.getPercentage(),
+                    userchoice: undefined
                 });
             }else{
                 res.render('poll.ejs', {
@@ -101,7 +103,8 @@ module.exports = function(app, passport){
                     autho: false,
                     choices: poll.getChoices(),
                     question: poll.question,
-                    percentage: poll.getPercentage()
+                    percentage: poll.getPercentage(),
+                    userchoice: req.user.answer[poll._id]
                 });
             }
         });
@@ -119,7 +122,8 @@ module.exports = function(app, passport){
                             autho: false,
                             choices: poll.getChoices(),
                             question: poll.question,
-                            percentage: poll.getPercentage()
+                            percentage: poll.getPercentage(),
+                            userchoice: undefined
                         });
                     });
                 }else{
@@ -142,7 +146,8 @@ module.exports = function(app, passport){
                             autho: false,
                             choices: poll.getChoices(),
                             question: poll.question,
-                            percentage: poll.getPercentage()
+                            percentage: poll.getPercentage(),
+                            userchoice: undefined
                         });
                     });
                 }else{
@@ -152,8 +157,10 @@ module.exports = function(app, passport){
                     res.redirect('/polls/'+req.params.id);
                 }
             })(req, res, next);
+        }else if(req.isAuthenticated()){
+            vote(req,res);
         }else{
-            res.send('voting');
+            res.redirect('/polls/'+req.params.id);
         }
     });
     
@@ -166,11 +173,12 @@ module.exports = function(app, passport){
                 autho: true,
                 choices: poll.getChoices(),
                 question: poll.question,
-                percentage: poll.getPercentage()
+                percentage: poll.getPercentage(),
+                userchoice: req.user.answer[poll._id]
             });
         });
     }).post('/mypolls/:id', function(req, res){
-       res.send('voting for my own'); 
+       vote(req, res); 
     });
     
     app.get('/delete/:id', pubPollorNot, function(req, res){
@@ -216,4 +224,27 @@ function pubPollorNot(req, res, next){
         if(poll.author === req.user.username) return next();
         res.redirect('/polls/'+req.params.id);
     });
+}
+
+function vote(req, res){
+    var answerId = 'answer.'+req.params.id;
+    var newChoice = 'choices.'+req.body.myFreakingFormLOL;
+    if(req.user.answer[req.params.id]){
+        var oldChoice = 'choices.'+req.user.answer[req.params.id];
+        Poll.findOneAndUpdate({_id: req.params.id}, {$inc: {[newChoice]:1, [oldChoice]: -1}}, {upsert: true, new: true}, function(err, doc){
+            if(err) console.log(err);
+            res.redirect(req.url);
+        });
+        User.findOneAndUpdate({username: req.user.username}, {[answerId]: req.body.myFreakingFormLOL}, function(err){
+            if(err) console.log(err);
+        });
+    }else{
+        User.findOneAndUpdate({username: req.user.username}, {[answerId]: req.body.myFreakingFormLOL}, {upsert: true}, function(err){
+            if(err) console.log(err);
+        });
+        Poll.findOneAndUpdate({_id: req.params.id}, {$inc: {[newChoice]: 1}}, {upsert: true, new: true}, function(err, doc){
+            if(err) console.log(err);
+            res.redirect(req.url);
+        });
+    }
 }
