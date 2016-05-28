@@ -1,5 +1,59 @@
 <% include ./layout %>
 <% include ./logged-nav %>
 <body>
-    
+    <div class='container'>
+        <form class='form-group' method='post'>
+            <fieldset>
+                <label for='username'>Username</label>
+                <input class='form-control' value='<%= username %>' disabled> <br>
+            </fieldset>
+            <fieldset>
+                <label for='email'>Username</label>
+                <input class='form-control' value='<%= email %>' disabled> <br>
+            </fieldset>
+            <fieldset>
+                <label for='newpassword'>New Password</label>
+                <input class='form-control' type='password' id='newpassword' name='newpassword' placeholder='Enter New Password' required>
+            </fieldset>
+            <fieldset>
+                <label for='confirmpassword'>Confirm New Password</label>
+                <input class='form-control' type='password' id='confirmpassword' placeholder='Confirm New Password' required>
+            </fieldset>
+            <fieldset>
+                <label for='oldpassword'>Password</label>
+                <input class='form-control' type='password' id='oldpassword' name='password' placeholder='Enter Old Password to Update' required>
+            </fieldset>
+            <fieldset>
+                <br>
+                <button class='form-control btn btn-primary'><i class='fa fa-pencil-square-o'></i> Save</button>
+            </fieldset>
+        </form>
+        <div class='alert alert-danger'></div>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $('.alert').hide();
+            var status = '<%= status %>';
+            if(status === 'fail'){
+                $('.alert').text('Wrong password! Unable to proceed to update!');
+                $('.alert').show();
+            }else if(status === 'success'){
+                $('.alert').removeClass('alert-danger');
+                $('.alert').addClass('alert-success');
+                $('.alert').text('Update password successfully!');
+                $('.alert').show();
+            }
+            $('.form-group').submit(function(){
+                if($('#newpassword').val() !== $('#confirmpassword').val()){
+                    event.preventDefault();
+                    $('.alert').text('Confirm password doesnt match!');
+                    $('.alert').show();
+                }else if($('#newpassword').val() === $('#oldpassword').val()){
+                    event.preventDefault();
+                    $('.alert').text('New password is the same as old password!');
+                    $('.alert').show();
+                }
+            })
+        })
+    </script>
 </body>

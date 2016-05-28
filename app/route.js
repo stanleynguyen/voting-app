@@ -187,7 +187,28 @@ module.exports = function(app, passport){
     });
     
     app.get('/settings', privateCheckLoggedIn, function(req, res){
-        res.send('settings');
+        res.render('settings.ejs',{
+            username: req.user.username,
+            email: req.user.email,
+            status: null
+        });
+    }).post('/settings', privateCheckLoggedIn, function(req, res){
+        if(req.user.validPassword(req.body.password)){
+            User.findOneAndUpdate({username: req.user.username}, {password: req.user.generateHash(req.body.newpassword)}, function(err){
+                if(err) throw err;
+            });
+            res.render('settings.ejs', {
+                username: req.user.username,
+                email: req.user.email,
+                status: 'success'
+            });
+        }else{
+            res.render('settings.ejs', {
+                username: req.user.username,
+                email: req.user.email,
+                status: 'fail'
+            });
+        }
     });
     
     app.get('/logout', privateCheckLoggedIn, function(req, res){

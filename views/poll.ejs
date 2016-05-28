@@ -12,9 +12,9 @@
           <div class='radio form-group'>
             <% for(var key in choices){ %>
               <% if(choices[key] === userchoice){ %>
-                <input type='radio' name='myFreakingFormLOL' value='<%= choices[key] %>' checked><strong><%= choices[key] %></strong> <br>
+                <input type='radio' name='myFreakingFormLOL' value='<%= choices[key] %>' checked required><strong><%= choices[key] %></strong> <br>
               <% }else{ %> 
-                <input type='radio' name='myFreakingFormLOL' value='<%= choices[key] %>'><strong><%= choices[key] %></strong> <br>
+                <input type='radio' name='myFreakingFormLOL' value='<%= choices[key] %>' required><strong><%= choices[key] %></strong> <br>
               <% } %>            
             <% } %>
           </div>
