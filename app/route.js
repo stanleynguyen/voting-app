@@ -259,9 +259,10 @@ function vote(req, res){
             newChoices[newNumbering] = {};
             newChoices[newNumbering].vote = 1;
             newChoices[newNumbering].content = req.body.myFreakingFormLOL;
-            Poll.findOneAndUpdate({_id: req.params.id}, {$set: {choices: newChoices}}, function(err){
-                if(err) throw err;
-            });
+            if(req.user.answer[req.params.id]) newChoices[req.user.answer[req.params.id]].vote--;
+                Poll.findOneAndUpdate({_id: req.params.id}, {$set: {choices: newChoices}}, function(err){
+                    if(err) throw err;
+                });
             User.findOneAndUpdate({username: req.user.username}, {$set: {[answerId]: newNumbering}}, function(err){
                if(err) throw err; 
                res.redirect(req.url);
