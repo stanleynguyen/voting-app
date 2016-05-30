@@ -11,10 +11,10 @@
         <form id='form' method='post'>
           <div class='radio form-group'>
             <% for(var key in choices){ %>
-              <% if(choices[key] === userchoice){ %>
-                <input type='radio' name='myFreakingFormLOL' value='<%= choices[key] %>' checked required><strong><%= choices[key] %></strong> <br>
+              <% if(key === userchoice){ %>
+                <input type='radio' name='myFreakingFormLOL' value='<%= key %>' checked required><strong><%= choices[key] %></strong> <br>
               <% }else{ %> 
-                <input type='radio' name='myFreakingFormLOL' value='<%= choices[key] %>' required><strong><%= choices[key] %></strong> <br>
+                <input type='radio' name='myFreakingFormLOL' value='<%= key %>' required><strong><%= choices[key] %></strong> <br>
               <% } %>            
             <% } %>
           </div>
@@ -31,7 +31,7 @@
       </div>  
       <div class='col-md-6 text-center'>
        <% for(var key in percentage){ %>
-         <h4 class='text-center'><%= percentage[key] %> voted for <%= key %></h4>
+         <h4 class='text-center'><%= percentage[key].percent %> voted for <%= percentage[key].content %></h4>
        <% } %>
       </div>
     </div>
