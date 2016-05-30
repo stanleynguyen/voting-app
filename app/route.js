@@ -251,27 +251,45 @@ function pubPollorNot(req, res, next){
 
 function vote(req, res){
     var answerId = 'answer.'+req.params.id;
-    var newChoice = 'choices.'+req.body.myFreakingFormLOL+'.vote';
-    if(req.user.answer[req.params.id]){
-        var oldChoice = 'choices.'+req.user.answer[req.params.id]+'.vote';
-        if(newChoice !== oldChoice){
-            Poll.findOneAndUpdate({_id: req.params.id}, {$inc: {[newChoice]:1, [oldChoice]: -1}}, {upsert: true, new: true}, function(err, doc){
-                if(err) console.log(err);
-                res.redirect(req.url);
+    Poll.findOne({_id: req.params.id}, function(err, poll){
+        if(err) throw err;
+        if(poll.notIn(req.body.myFreakingFormLOL)){
+            var newNumbering = (poll.getSize()+1).toString();
+            var newChoices = poll.choices;
+            newChoices[newNumbering] = {};
+            newChoices[newNumbering].vote = 1;
+            newChoices[newNumbering].content = req.body.myFreakingFormLOL;
+            Poll.findOneAndUpdate({_id: req.params.id}, {$set: {choices: newChoices}}, function(err){
+                if(err) throw err;
             });
-            User.findOneAndUpdate({username: req.user.username}, {[answerId]: req.body.myFreakingFormLOL}, function(err){
-                if(err) console.log(err);
+            User.findOneAndUpdate({username: req.user.username}, {$set: {[answerId]: newNumbering}}, function(err){
+               if(err) throw err; 
+               res.redirect(req.url);
             });
         }else{
-            res.redirect(req.url);
+            var newChoice = 'choices.'+req.body.myFreakingFormLOL+'.vote';
+            if(req.user.answer[req.params.id]){
+                var oldChoice = 'choices.'+req.user.answer[req.params.id]+'.vote';
+                if(newChoice !== oldChoice){
+                    Poll.findOneAndUpdate({_id: req.params.id}, {$inc: {[newChoice]:1, [oldChoice]: -1}}, {upsert: true, new: true}, function(err, doc){
+                        if(err) console.log(err);
+                        res.redirect(req.url);
+                    });
+                    User.findOneAndUpdate({username: req.user.username}, {[answerId]: req.body.myFreakingFormLOL}, function(err){
+                        if(err) console.log(err);
+                    });
+                }else{
+                    res.redirect(req.url);
+                }
+            }else{
+                User.findOneAndUpdate({username: req.user.username}, {[answerId]: req.body.myFreakingFormLOL}, {upsert: true}, function(err){
+                    if(err) console.log(err);
+                });
+                Poll.findOneAndUpdate({_id: req.params.id}, {$inc: {[newChoice]: 1}}, {upsert: true, new: true}, function(err, doc){
+                    if(err) console.log(err);
+                    res.redirect(req.url);
+                });
+            }
         }
-    }else{
-        User.findOneAndUpdate({username: req.user.username}, {[answerId]: req.body.myFreakingFormLOL}, {upsert: true}, function(err){
-            if(err) console.log(err);
-        });
-        Poll.findOneAndUpdate({_id: req.params.id}, {$inc: {[newChoice]: 1}}, {upsert: true, new: true}, function(err, doc){
-            if(err) console.log(err);
-            res.redirect(req.url);
-        });
-    }
+    });
 }

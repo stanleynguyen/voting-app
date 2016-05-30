@@ -14,6 +14,21 @@ pollSchema.methods.resNumber = function(){
     return result;
 };
 
+pollSchema.methods.getSize = function(){
+    var result = 0;
+    for(var key in this.choices){
+        if(key !== 'iniVal') result ++;
+    }
+    return result;
+};
+
+pollSchema.methods.notIn = function(content){
+    for(var key in this.choices){
+        if(key === content) return false;
+    }
+    return true;
+};
+
 pollSchema.methods.getChoices = function(){
     var choices = {};
     for(var key in this.choices){
