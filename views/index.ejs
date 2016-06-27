@@ -11,7 +11,7 @@
         <div class='row'>
             <div class="list-group">
                 <% polls.forEach(function(poll){%>
-                    <a href='/polls/<%= poll._id %>' class='list-group-item'><%= poll.question %><span class='pull-right'><strong><%= poll.author %></strong></span></a>
+                    <a href='/polls/<%= poll._id %>' class='list-group-item clearfix'><%= poll.question %><span class='pull-right'><strong><%= poll.author %></strong></span></a>
                 <% }) %>
             </div>
         </div>

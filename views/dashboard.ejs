@@ -75,21 +75,21 @@
                 	<div class="tab-pane active" id="all">
                         <div class="list-group">
                             <% polls.forEach(function(poll){%>
-                                <a href='/polls/<%= poll._id %>' class='list-group-item'><%= poll.question %><span class='pull-right'><strong><%= poll.author %></strong></span></a>
+                                <a href='/polls/<%= poll._id %>' class='list-group-item clearfix'><%= poll.question %><span class='pull-right'><strong><%= poll.author %></strong></span></a>
                             <% }) %>
                         </div>
                 	</div>
                     <div class="tab-pane" id="my">
                          <div class="list-group">
                             <% myPolls.forEach(function(poll){%>
-                                <a href='/mypolls/<%= poll._id %>' class='list-group-item'><%= poll.question %></a>
+                                <a href='/mypolls/<%= poll._id %>' class='list-group-item clearfix'><%= poll.question %></a>
                             <% }) %>
                         </div>
                 	</div>
                 	<div class="tab-pane" id="other">
                          <div class="list-group">
                             <% otherPolls.forEach(function(poll){%>
-                                <a href='/polls/<%= poll._id %>' class='list-group-item'><%= poll.question %><span class='pull-right'><strong><%= poll.author %></strong></span></a>
+                                <a href='/polls/<%= poll._id %>' class='list-group-item clearfix'><%= poll.question %><span class='pull-right'><strong><%= poll.author %></strong></span></a>
                             <% }) %>
                         </div>
                 	</div>
